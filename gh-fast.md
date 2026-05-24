@@ -8,5 +8,33 @@
 | WHITE_LIST         | 空、/user/,/repo/         | 访问白名单，逗号分隔，留空无限制                        |
 
 ---
+
 ### 图片
 <img src="gh-fast.png" width="750">
+
+https://cdn.jsdelivr.net/gh/yf20230412/gh-proxy/refs/heads/master/gh-fast.png
+
+
+### ENABLE_JSDELIVR变量为 1 时
+```
+https://raw.githubusercontent.com/yf20230412/gh-proxy/refs/heads/master/gh-fast.png
+```
+
+拼接格式：
+```
+https://cdn.jsdelivr.net/gh/用户名/仓库名@分支标签/文件路径
+```
+
+- 用户名： yf20230412 
+​
+- 仓库名： gh-proxy 
+​
+- 分支版本： refs/heads/master 
+​
+- 剩余文件路径： gh-fast.png
+
+最终拼接完成链接：
+```
+https://cdn.jsdelivr.net/gh/yf20230412/gh-proxy@refs/heads/master/gh-fast.png
+```
+
