@@ -1,7 +1,7 @@
 'use strict'
 
 // ====================== 正确读取环境变量（无报错版） ======================
-const ASSET_URL        = typeof ENVIRONMENT !== 'undefined' ? ENVIRONMENT.ASSET_URL : 'https://github2-bv9.pages.dev' //静态资源
+const ASSET_URL        = typeof ENVIRONMENT !== 'undefined' ? ENVIRONMENT.ASSET_URL : 'https://xxxx.pages.dev' //静态资源
 const PREFIX           = typeof ENVIRONMENT !== 'undefined' ? ENVIRONMENT.PREFIX : '/' // 路径前缀 如果自定义路由为example.com/gh/*，将PREFIX改为 '/gh/'，注意，少一个杠都会错！
 const ENABLE_JSDELIVR  = typeof ENVIRONMENT !== 'undefined' ? Number(ENVIRONMENT.ENABLE_JSDELIVR) : 0 //0 = GitHub实时更新   1=jsDelivr 有缓存
 const FORCE_REGION     = typeof ENVIRONMENT !== 'undefined' ? Number(ENVIRONMENT.FORCE_REGION) : 1 // 1=开启强制地区 0=关闭
