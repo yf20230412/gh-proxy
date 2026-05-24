@@ -1,3 +1,4 @@
+简体中文|[gh-fast变量](gh-fast.md)
 # gh-proxy
 
 ## 简介
