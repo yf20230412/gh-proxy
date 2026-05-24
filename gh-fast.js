@@ -1,7 +1,7 @@
 'use strict'
 
 // ====================== 正确读取环境变量（无报错版） ======================
-const ASSET_URL        = typeof ENVIRONMENT !== 'undefined' ? ENVIRONMENT.ASSET_URL : 'https://xxxx.pages.dev' //静态资源
+const ASSET_URL        = typeof ENVIRONMENT !== 'undefined' ? ENVIRONMENT.ASSET_URL : 'https://github2-bv9.pages.dev' //静态资源
 const PREFIX           = typeof ENVIRONMENT !== 'undefined' ? ENVIRONMENT.PREFIX : '/' // 路径前缀 如果自定义路由为example.com/gh/*，将PREFIX改为 '/gh/'，注意，少一个杠都会错！
 const ENABLE_JSDELIVR  = typeof ENVIRONMENT !== 'undefined' ? Number(ENVIRONMENT.ENABLE_JSDELIVR) : 0 //0 = GitHub实时更新   1=jsDelivr 有缓存
 const FORCE_REGION     = typeof ENVIRONMENT !== 'undefined' ? Number(ENVIRONMENT.FORCE_REGION) : 1 // 1=开启强制地区 0=关闭
@@ -23,9 +23,13 @@ const PREFLIGHT_INIT = {
 }
 
 const exp1 = /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/(?:releases|archive).*$/i
-const exp2 = /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/(?:blob|raw).*$/i
+//const exp2 = /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/(?:blob|raw).*$/i
+// 只匹配 github.com/blob 链接，排除raw
+const exp2 = /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/blob.*$/i
 const exp3 = /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/(?:info|git-).*$/i
-const exp4 = /^(?:https?:\/\/)?raw\.githubusercontent\.com\/.+?\/.+?\/.+?\/.+$/i
+//const exp4 = /^(?:https?:\/\/)?raw\.githubusercontent\.com\/.+?\/.+?\/.+?\/.+$/i
+const exp4 = /^(?:https?:\/\/)?raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/(.+)$/i
+
 const exp5 = /^(?:https?:\/\/)?gist\.github\.com\/.+?\/.+?\/.+$/i
 const exp6 = /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/tags.*$/i
 
@@ -66,23 +70,40 @@ async function fetchHandler(e) {
         return Response.redirect('https://' + urlObj.host + PREFIX + path, 301)
     }
     path = urlObj.href.substr(urlObj.origin.length + PREFIX.length).replace(/^https?:\/+/, 'https://')
-    if (path.search(exp1) === 0 || path.search(exp5) === 0 || path.search(exp6) === 0 || path.search(exp3) === 0 || path.search(exp4) === 0) {
-        return httpHandler(req, path)
-    } else if (path.search(exp2) === 0) {
+
+    // 优先单独匹配 raw.githubusercontent 域名
+    if (path.search(exp4) === 0) {
+        if (ENABLE_JSDELIVR) {
+            const newUrl = path.replace(
+                /^https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\//,
+                'https://cdn.jsdelivr.net/gh/$1/$2@'
+            )
+            return Response.redirect(newUrl, 302)
+        } else {
+            return httpHandler(req, path)
+        }
+    }
+
+    // 再匹配 github.com 相关链接
+    else if (path.search(exp2) === 0) {
         if (ENABLE_JSDELIVR) {
             const newUrl = path.replace('/blob/', '@').replace(/^(?:https?:\/\/)?github\.com/, 'https://cdn.jsdelivr.net/gh')
             return Response.redirect(newUrl, 302)
         } else {
             path = path.replace('/blob/', '/raw/')
             return httpHandler(req, path)
-        }
-    } else if (path.search(exp4) === 0) {
-        const newUrl = path.replace(/(?<=com\/.+?\/.+?)\/(.+?\/)/, '@$1').replace(/^(?:https?:\/\/)?raw\.githubusercontent\.com/, 'https://cdn.jsdelivr.net/gh')
-        return Response.redirect(newUrl, 302)
-    } else {
+        }    
+    }
+    // 其余Github资源统一代理
+    else if (path.search(exp1) === 0 || path.search(exp5) === 0 || path.search(exp6) === 0 || path.search(exp3) === 0) {
+        return httpHandler(req, path)
+    }
+    // 兜底静态页面
+    else {
         return fetch(ASSET_URL + path)
     }
 }
+
 
 function httpHandler(req, pathname) {
     const reqHdrRaw = req.headers
