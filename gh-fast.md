@@ -9,4 +9,4 @@
 
 ---
 ### 图片
-<img src="gh-fast.png" width="400">
+<img src="gh-fast.png" width="550">
