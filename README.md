@@ -1,4 +1,4 @@
-[简体中文](README.md)|[English](gh-fast.md)
+简体中文|[English](gh-fast.md)
 # gh-proxy
 
 ## 简介
