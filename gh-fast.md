@@ -7,5 +7,6 @@
 | CF_REGION_CODE     | HK                        | HK=香港 / JP=日本 / SG=新加坡 / KR=韩国 / TW=台湾      |
 | WHITE_LIST         | /username/,/repo/         | 白名单，逗号分隔                                       |
 
-## 图片
-![gh-fast变量](gh-fast.png){width=400px}
+---
+### 图片
+<img src="gh-fast.png" width="400">
