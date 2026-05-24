@@ -12,8 +12,6 @@
 ### 图片
 <img src="gh-fast.png" width="750">
 
-https://cdn.jsdelivr.net/gh/yf20230412/gh-proxy/refs/heads/master/gh-fast.png
-
 
 ### ENABLE_JSDELIVR变量为 1 时
 ```
