@@ -8,4 +8,4 @@
 | WHITE_LIST         | /username/,/repo/         | 白名单，逗号分隔                                       |
 
 ## 图片
-[gh-fast变量](gh-fast.png)
+![gh-fast变量](gh-fast.png){width=400px}
